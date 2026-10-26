@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1F4E5F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="الصف الثاني">
+<link rel="apple-touch-icon" href="img/moe.png">
+<title>منصة الصف الثاني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700&display=swap">
+<style>
+/* Layout: sticky top bar + tab strip, one view at a time; cards and lists below. */
+:root{
+  --bg:#F4F6F5; --surface:#FFFFFF; --ink:#1D2B30; --muted:#5E6E73; --line:#DCE3E2; --soft:#EAF0EF;
+  --teal:#1F4E5F; --teal-2:#2E6F84; --gold:#A8741E; --cream:#FBF6EC;
+  --ok:#1E6B3A; --ok-bg:#E3F2E7; --warn:#8A5A00; --warn-bg:#FFF1D6; --bad:#9B2C2C; --bad-bg:#FBE3E0; --info:#1F4E8C; --info-bg:#E3EEF9;
+  --display:"Noto Kufi Arabic","IBM Plex Sans Arabic",Tahoma,sans-serif; --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0E1719; --surface:#152226; --ink:#E3ECEC; --muted:#9AB0B3; --line:#26383D; --soft:#1B2C30;
+  --teal:#5FB4C9; --teal-2:#7CC6D8; --gold:#E0B060; --cream:#262014;
+  --ok:#7FD39A; --ok-bg:#16301F; --warn:#F0C46A; --warn-bg:#33270F; --bad:#F29A9A; --bad-bg:#3A1A1A; --info:#9CC2F2; --info-bg:#172A40; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--teal)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+header.top{position:sticky;top:0;z-index:20;background:var(--teal);color:#fff;padding-top:env(safe-area-inset-top)}
+header.top .wrap{display:flex;align-items:center;gap:12px;padding-block:10px}
+header.top img{height:40px;background:#fff;border-radius:8px;padding:3px 6px}
+header.top h1{font-family:var(--display);font-size:1.1rem;margin:0;line-height:1.3}
+header.top small{display:block;font-size:.78rem;opacity:.85;font-weight:400}
+nav.tabs{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:19}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-weight:600;padding:12px 14px;border-bottom:3px solid transparent}
+nav.tabs a[aria-current="page"]{color:var(--teal);border-color:var(--gold)}
+main{padding-block:18px 60px}
+section.view{display:none}
+section.view.on{display:block}
+h2{font-family:var(--display);font-size:1.3rem;margin:26px 0 10px;color:var(--teal);text-wrap:balance}
+h2:first-child{margin-top:4px}
+h3{font-size:1.05rem;margin:0 0 6px}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(46%,150px),1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi b{display:block;font-family:var(--display);font-size:1.7rem;color:var(--teal);line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.85rem;color:var(--muted)}
+.now{background:var(--cream);border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));border-radius:14px;padding:14px 16px;display:grid;gap:6px}
+.now .tag{font-size:.8rem;font-weight:700;color:var(--gold)}
+.now strong{font-family:var(--display);font-size:1.15rem}
+.bars{display:grid;gap:7px}
+.bar{display:grid;grid-template-columns:minmax(0,9.5em) 1fr 3.2em;align-items:center;gap:8px;font-size:.88rem}
+.bar .t{position:relative;height:14px;background:var(--soft);border-radius:7px;overflow:hidden}
+.bar .t i{position:absolute;inset-block:0;right:0;border-radius:7px}
+.bar .t::after{content:"";position:absolute;inset-block:-2px;right:80%;width:2px;background:var(--ink);opacity:.35}
+.bar.nothr .t::after{display:none}
+.bar .v{font-variant-numeric:tabular-nums;font-weight:600;text-align:left}
+.lo{background:var(--bad)} .mid{background:var(--warn)} .hi{background:var(--ok)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:middle}
+.stack{display:flex;height:30px;border-radius:9px;overflow:hidden;font-size:.8rem;font-weight:700}
+.stack div{display:flex;align-items:center;justify-content:center;color:#fff;min-width:0}
+.weeks{display:grid;gap:10px}
+.week{display:grid;grid-template-columns:3.2em 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.week.cur{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.week .no{font-family:var(--display);font-size:1.5rem;color:var(--teal);text-align:center;line-height:1.1}
+.week .no small{display:block;font-size:.7rem;color:var(--muted);font-family:var(--body)}
+.week .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--ink);text-decoration:none;border:1px solid var(--line)}
+.chip.r{background:var(--info-bg);color:var(--info);border-color:transparent}
+.chip.e{background:var(--cream);color:var(--gold);border-color:transparent}
+.chip.ok{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.chip.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.chip.bad{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-size:.88rem;font-weight:600;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+input[type=search],input[type=password],input[type=text]{font:inherit;width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)}
+.ws{display:flex;flex-direction:column;gap:8px}
+.ws .hd{display:flex;gap:10px;align-items:flex-start}
+.ws .badge{flex:0 0 auto;width:2.4em;height:2.4em;border-radius:10px;display:grid;place-items:center;font-weight:700;font-family:var(--display)}
+.ws .badge.r{background:var(--info-bg);color:var(--info)}
+.ws .badge.e{background:var(--cream);color:var(--gold)}
+.ws .badge.l{background:var(--ok-bg);color:var(--ok)}
+.ws .badge.i{background:var(--info-bg);color:var(--info)}
+.ws .badge.s{background:var(--soft);color:var(--teal);font-size:.72rem}
+.ws .badge.t{background:var(--bad-bg);color:var(--bad);font-size:.72rem}
+.ws h3{margin:0;line-height:1.4}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.btn{font:inherit;font-size:.86rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;border:1.5px solid var(--teal);color:var(--teal);background:transparent;text-decoration:none;cursor:pointer}
+.btn.fill{background:var(--teal);color:#fff}
+.btn.wa{border-color:#1F8F4E;color:#1F8F4E}
+.btn.wa.fill{background:#1F8F4E;color:#fff}
+.btn:focus-visible,.seg button:focus-visible,nav.tabs a:focus-visible,input:focus-visible,.srow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:wait}
+.lock{max-width:420px;margin:30px auto;text-align:center;display:grid;gap:12px}
+.lock .ic{font-size:2.4rem}
+.err{color:var(--bad);font-weight:600;min-height:1.5em}
+.slist{display:grid;gap:8px}
+.srow{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;text-align:right;font:inherit;color:inherit;width:100%}
+.srow .nm{font-weight:700}
+.srow .pc{font-family:var(--display);font-size:1.2rem;color:var(--teal);font-variant-numeric:tabular-nums}
+.srow .meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+dialog{border:0;border-radius:18px;padding:0;width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 40px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,22,.55)}
+.dlg-h{position:sticky;top:0;background:var(--teal);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.dlg-h h3{margin:0;font-family:var(--display);font-size:1.15rem;flex:1}
+.dlg-h button{font:inherit;background:transparent;border:1.5px solid rgba(255,255,255,.6);color:#fff;border-radius:10px;padding:4px 12px;cursor:pointer}
+.dlg-b{padding:16px;display:grid;gap:14px}
+.sc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(46%,110px),1fr));gap:8px}
+.sc div{background:var(--soft);border-radius:10px;padding:8px 10px;font-size:.8rem;color:var(--muted)}
+.sc b{display:block;font-size:1.15rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.skmap{display:flex;flex-wrap:wrap;gap:6px}
+.msg{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.flist{display:grid;gap:8px}
+.frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.frow .ft{flex:1 1 220px;min-width:0}
+.frow .ft b{display:block}
+footer{color:var(--muted);font-size:.8rem;text-align:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
+.toast{position:fixed;inset-inline:16px;bottom:calc(16px + env(safe-area-inset-bottom));margin:auto;max-width:420px;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:12px;text-align:center;font-weight:600;z-index:50}
+@media (max-width:520px){.bar{grid-template-columns:minmax(0,7.6em) 1fr 3em;font-size:.8rem}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <img src="img/moe.png" alt="وزارة التعليم">
+  <h1>منصة الصف الثاني · لغتي والدراسات الإسلامية<small id="hdsub"></small></h1>
+</div></header>
+<nav class="tabs" aria-label="الأقسام"><div class="wrap">
+  <a href="#home">الرئيسية والتحليل</a><a href="#ws">أوراق العمل</a><a href="#students">الطلاب</a><a href="#files">الملفات</a>
+</div></nav>
+
+<main class="wrap">
+  <section class="view" id="v-home">
+    <div class="now" id="now"></div>
+    <h2>مؤشرات الصف</h2>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="card"><h3>تصنيف الطلاب في البرنامج</h3><div class="stack" id="cats"></div><div class="legend" id="catleg"></div></div>
+      <div class="card"><h3>مستويات الطلاب</h3><div class="bars" id="levels"></div></div>
+    </div>
+    <h2>إتقان الصف لكل مهارة</h2>
+    <div class="card"><div class="bars" id="mastery"></div>
+      <div class="legend"><span><i class="lo"></i>أقل من ٦٥٪</span><span><i class="mid"></i>٦٥–٧٩٪</span><span><i class="hi"></i>٨٠٪ فأكثر</span><span>الخط الرأسي: معيار الإتقان ٨٠٪</span></div></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="card"><h3>الإتقان حسب المجال</h3><div class="bars" id="domains"></div></div>
+      <div class="card"><h3>متوسط مكونات الدرجة</h3><div class="bars" id="comp"></div></div>
+    </div>
+    <h2>البرنامج العلاجي والإثرائي (٦ أسابيع)</h2>
+    <p class="muted small" id="period"></p>
+    <div class="weeks" id="weeks"></div>
+  </section>
+
+  <section class="view" id="v-ws">
+    <h2>مكتبة أوراق العمل</h2>
+    <p class="muted small" id="wscount"></p>
+    <div class="toolbar">
+      <div class="seg" id="wsf"></div>
+      <input type="search" id="wsq" placeholder="ابحث باسم الورقة أو المهارة…" aria-label="بحث في الأوراق">
+    </div>
+    <div class="grid g3" id="wslist"></div>
+  </section>
+
+  <section class="view" id="v-students">
+    <div id="lockbox"></div>
+    <div id="stu" hidden>
+      <h2>الطلاب (<span id="scount"></span>)</h2>
+      <div class="toolbar"><div class="seg" id="sf"></div></div>
+      <div class="slist" id="slist"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-files">
+    <h2>ملفات عامة</h2>
+    <div class="flist" id="pubfiles"></div>
+    <h2>ملفات فيها أسماء الطلاب</h2>
+    <div id="lockfiles"></div>
+  </section>
+</main>
+<footer id="foot"></footer>
+
+<dialog id="dlg"><div class="dlg-h"><h3 id="dlgt"></h3><button id="dlgx">إغلاق</button></div><div class="dlg-b" id="dlgb"></div></dialog>
+
+<script>
+const P = {"teacher":"ثامر صالح محمد الجمحان","principal":"فهد بن عبيد بن شمروخ العتيبي","school":"مدرسة خف الابتدائية","term":"الفصل الدراسي الأول ١٤٤٨هـ","n":13,"kpi":{"mean":88.7,"median":94.2,"skills":81,"attendance":92.5,"excellent":10,"perfect":4},"cats":{"intensive":3,"support":5,"enrich":5},"levels":{"ممتاز":10,"جيد جدًا":1,"متوسط":1,"دون المتوسط":1},"comp":[{"name":"الاختبار الشهري","pct":89.3},{"name":"القراءة","pct":80.9},{"name":"الواجبات","pct":96.2},{"name":"الإملاء والخط","pct":83.1},{"name":"المشاركة","pct":93.1}],"mastery":[{"k":"lam","name":"لام التعريف الشمسية والقمرية","short":"لام التعريف الشمسية والقمرية","pct":92,"x":1,"f":0},{"k":"taa","name":"التاء المربوطة والمفتوحة","short":"التاء المربوطة والمفتوحة","pct":92,"x":0,"f":1},{"k":"haa","name":"الهاء والتاء المربوطة","short":"الهاء والتاء المربوطة","pct":92,"x":1,"f":0},{"k":"tanween","name":"التنوين","short":"التنوين","pct":100,"x":0,"f":0},{"k":"shadda","name":"التضعيف (الشدة)","short":"التضعيف (الشدة)","pct":92,"x":1,"f":0},{"k":"madd","name":"أصوات المد وأنواعه","short":"أصوات المد وأنواعه","pct":92,"x":1,"f":0},{"k":"inna","name":"الجملة الاسمية المؤكدة بإنّ","short":"الجملة الاسمية المؤكدة بإنّ","pct":100,"x":0,"f":0},{"k":"duaa","name":"أسلوب الدعاء","short":"الدعاء","pct":85,"x":1,"f":1},{"k":"types","name":"أنواع الكلمة (اسم – فعل – حرف)","short":"أنواع الكلمة","pct":38,"x":2,"f":6},{"k":"q","name":"أسلوب الاستفهام","short":"الاستفهام","pct":46,"x":2,"f":5},{"k":"plural","name":"الإفراد والجمع","short":"الإفراد والجمع","pct":62,"x":2,"f":3},{"k":"dual","name":"المفرد والمثنى والجمع","short":"المثنى والجمع","pct":62,"x":2,"f":3},{"k":"read","name":"القراءة الجهرية (نطق سليم وطلاقة)","short":"القراءة الجهرية","pct":77,"x":1,"f":2},{"k":"comp","name":"الفهم والاستيعاب","short":"الفهم والاستيعاب","pct":92,"x":0,"f":1},{"k":"meaning","name":"اكتشاف المعنى (الترادف والتضاد)","short":"اكتشاف المعنى","pct":85,"x":0,"f":2},{"k":"line","name":"كتابة الحروف في مواضعها على السطر","short":"الكتابة على السطر","pct":77,"x":1,"f":2},{"k":"dict","name":"الإملاء (الكتابة من الذاكرة)","short":"الإملاء","pct":62,"x":2,"f":3},{"k":"hand","name":"جودة الخط ووضوحه","short":"جودة الخط","pct":92,"x":0,"f":1},{"k":"order","name":"ترتيب الكلمات لتكوين جملة مفيدة","short":"ترتيب الكلمات لتكوين جملة مفيدة","pct":92,"x":1,"f":0}],"domains":[{"name":"الظواهر الصوتية والإملائية","pct":93},{"name":"التراكيب والأساليب اللغوية","pct":66},{"name":"القراءة والكتابة العامة","pct":82}],"weeks":[{"n":"١","h":"٧–١١ جمادى الأولى","g":"١٨–٢٢ أكتوبر","focus":"التهيئة والتشخيص الدقيق، وإبلاغ أولياء الأمور بالخطط","enrich":"«الكاتب الصغير»: علم بلادي"},{"n":"٢","h":"١٤–١٨ جمادى الأولى","g":"٢٥–٢٩ أكتوبر","focus":"أنواع الكلمة","enrich":"«الباحث الصغير»: محصول من بلادي"},{"n":"٣","h":"٢١–٢٥ جمادى الأولى","g":"١–٥ نوفمبر","focus":"أسلوب الاستفهام، وتقييم مرحلي","enrich":"«الكاتب الصغير»: قصة حبة القمح"},{"n":"٤","h":"٢٨ جمادى الأولى – ٢ جمادى الآخرة","g":"٨–١٢ نوفمبر","focus":"المفرد والمثنى والجمع","enrich":"«تحدّي لغتي»"},{"n":"٥","h":"٥–٩ جمادى الآخرة","g":"١٥–١٩ نوفمبر","focus":"الإملاء والقراءة الجهرية","enrich":"لغز «من أنا؟» والمعلم المساعد"},{"n":"٦","h":"١٩–٢٣ جمادى الآخرة","g":"٢٩ نوفمبر – ٣ ديسمبر","focus":"التقييم الختامي والتغذية الراجعة","enrich":"المعرض الختامي والتكريم"}],"weekDates":[["2026-10-18","2026-10-22"],["2026-10-25","2026-10-29"],["2026-11-01","2026-11-05"],["2026-11-08","2026-11-12"],["2026-11-15","2026-11-19"],["2026-11-29","2026-12-03"]],"brk":"إجازة الخريف من ١٠ إلى ١٨ جمادى الآخرة (٢٠–٢٨ نوفمبر)","period":"٧ جمادى الأولى – ٢٣ جمادى الآخرة ١٤٤٨هـ · ١٨ أكتوبر – ٣ ديسمبر ٢٠٢٦م","crit":{"types":"يصنّف ٨ من ١٠ كلمات إلى اسم وفعل وحرف تصنيفًا صحيحًا.","q":"يكوّن ٥ أسئلة صحيحة بأدوات مختلفة، وينهي كلًّا منها بعلامة الاستفهام.","plural":"يحوّل ٨ من ١٠ كلمات من المفرد إلى الجمع شفهيًا وكتابيًا.","dual":"يكمل جدولًا من ٦ كلمات (مفرد – مثنى – جمع) دون أخطاء تقريبًا.","dict":"يكتب ٨ من ١٠ كلمات صحيحة في إملاء اختباري قصير.","read":"يقرأ فقرة الدرس بأقل من ٣ أخطاء، وبسرعة تزداد كل أسبوع.","line":"ينسخ سطرين بحروف في مواضعها الصحيحة بنسبة ٨٠٪.","duaa":"يحوّل ٤ جمل إلى أسلوب الدعاء تحويلًا صحيحًا.","meaning":"يذكر مرادف ٤ كلمات من ٥ وأضدادها.","hand":"ينسخ سطرين بخط واضح مقروء وحجم مناسب."},"ws":[{"id":"r1","kind":"r","no":1,"title":"صناديق الكلمات الثلاثة","skill":"أنواع الكلمة","week":"الأسبوع الثاني","weeks":[2],"count":13,"file":"files/ws/sheet_01.pdf"},{"id":"r2","kind":"r","no":2,"title":"أنواع الكلمة في الجملة","skill":"أنواع الكلمة","week":"الأسبوع الثاني","weeks":[2],"count":13,"file":"files/ws/sheet_02.pdf"},{"id":"r3","kind":"r","no":3,"title":"لكل سؤال أداة","skill":"أسلوب الاستفهام","week":"الأسبوع الثالث","weeks":[3],"count":13,"file":"files/ws/sheet_03.pdf"},{"id":"r4","kind":"r","no":4,"title":"المراسل الصغير","skill":"أسلوب الاستفهام","week":"الأسبوع الثالث","weeks":[3],"count":13,"file":"files/ws/sheet_04.pdf"},{"id":"r5","kind":"r","no":5,"title":"من الواحد إلى الكثير","skill":"الإفراد والجمع","week":"الأسبوع الرابع","weeks":[4],"count":5,"file":"files/ws/sheet_05.pdf"},{"id":"r6","kind":"r","no":6,"title":"واحد، اثنان، كثير","skill":"المفرد والمثنى والجمع","week":"الأسبوع الرابع","weeks":[4],"count":5,"file":"files/ws/sheet_06.pdf"},{"id":"r7","kind":"r","no":7,"title":"أدعو الله","skill":"أسلوب الدعاء","week":"الأسبوع الأول","weeks":[1],"count":2,"file":"files/ws/sheet_07.pdf"},{"id":"r8","kind":"r","no":8,"title":"أنظر، أقول، أغطّي، أكتب، أتحقّق","skill":"الإملاء (الكتابة من الذاكرة)","week":"الأسبوع الخامس","weeks":[5],"count":5,"file":"files/ws/sheet_08.pdf"},{"id":"r9","kind":"r","no":9,"title":"إملاء اختباري","skill":"الإملاء (الكتابة من الذاكرة)","week":"الأسبوع الخامس","weeks":[5],"count":5,"file":"files/ws/sheet_09.pdf"},{"id":"r10","kind":"r","no":10,"title":"أقرأ بطلاقة","skill":"القراءة الجهرية","week":"طوال الخطة","weeks":[],"count":5,"file":"files/ws/sheet_10.pdf"},{"id":"r11","kind":"r","no":11,"title":"أكتب على السطر بخط جميل","skill":"الكتابة على السطر وجودة الخط","week":"الأسبوع الخامس","weeks":[5],"count":3,"file":"files/ws/sheet_11.pdf"},{"id":"r12","kind":"r","no":12,"title":"المرادف والضد","skill":"اكتشاف المعنى (الترادف والتضاد)","week":"الأسبوع السادس","weeks":[6],"count":2,"file":"files/ws/sheet_12.pdf"},{"id":"r13","kind":"r","no":13,"title":"أقرأ وأفهم","skill":"الفهم والاستيعاب","week":"الأسبوع السادس","weeks":[6],"count":1,"file":"files/ws/sheet_13.pdf"},{"id":"r14","kind":"r","no":14,"title":"أرتّب الكلمات","skill":"ترتيب الكلمات لتكوين جملة مفيدة","week":"الأسبوع الخامس","weeks":[5],"count":1,"file":"files/ws/sheet_14.pdf"},{"id":"r15","kind":"r","no":15,"title":"أصوات المد","skill":"أصوات المد وأنواعه","week":"الأسبوعان الأول والثاني","weeks":[1,2],"count":1,"file":"files/ws/sheet_15.pdf"},{"id":"r16","kind":"r","no":16,"title":"اللام الشمسية واللام القمرية","skill":"لام التعريف الشمسية والقمرية","week":"الأسبوع الثالث","weeks":[3],"count":1,"file":"files/ws/sheet_16.pdf"},{"id":"r17","kind":"r","no":17,"title":"التاء المربوطة والتاء المفتوحة","skill":"التاء المربوطة والمفتوحة","week":"الأسبوع الثالث","weeks":[3],"count":1,"file":"files/ws/sheet_17.pdf"},{"id":"r18","kind":"r","no":18,"title":"الهاء والتاء المربوطة","skill":"الهاء والتاء المربوطة","week":"الأسبوع الرابع","weeks":[4],"count":1,"file":"files/ws/sheet_18.pdf"},{"id":"r19","kind":"r","no":19,"title":"الحرف المشدد","skill":"التضعيف (الشدة)","week":"الأسبوع الرابع","weeks":[4],"count":1,"file":"files/ws/sheet_19.pdf"},{"id":"e1","kind":"e","no":1,"title":"علم بلادي","skill":"الكاتب الصغير","week":"الأسبوع الأول","weeks":[1],"count":5,"file":"files/ws/esheet_01.pdf"},{"id":"e2","kind":"e","no":2,"title":"محصول من بلادي","skill":"الباحث الصغير","week":"الأسبوع الثاني","weeks":[2],"count":5,"file":"files/ws/esheet_02.pdf"},{"id":"e3","kind":"e","no":3,"title":"رحلة حبة القمح","skill":"الكاتب الصغير","week":"الأسبوع الثالث","weeks":[3],"count":5,"file":"files/ws/esheet_03.pdf"},{"id":"e4","kind":"e","no":4,"title":"تحدّي لغتي","skill":"تحدّي لغتي","week":"الأسبوع الرابع","weeks":[4],"count":5,"file":"files/ws/esheet_04.pdf"},{"id":"e5","kind":"e","no":5,"title":"لغز «من أنا؟»","skill":"الكاتب الصغير والمعلم المساعد","week":"الأسبوع الخامس","weeks":[5],"count":5,"file":"files/ws/esheet_05.pdf"},{"id":"e6","kind":"e","no":6,"title":"المعرض الختامي","skill":"المعرض الختامي","week":"الأسبوع السادس","weeks":[6],"count":5,"file":"files/ws/esheet_06.pdf"},{"id":"e7","kind":"e","no":7,"title":"بطاقة القارئ الصغير","skill":"القارئ الصغير","week":"طوال الخطة","weeks":[],"count":5,"file":"files/ws/esheet_07.pdf"},{"id":"e8","kind":"e","no":8,"title":"قاموسي الصغير","skill":"قاموسي الصغير","week":"طوال الخطة","weeks":[],"count":5,"file":"files/ws/esheet_08.pdf"}],"pack":null,"logBlank":"files/ws/log_blank.pdf","lessons":[{"slug":"lesson1","subject":"lugh","title":"مدينتان مقدستان","sheets":[{"id":"lesson1_1","no":1,"title":"أقرأ وأفهم","file":"files/lessons/lesson1/sheet_1.pdf"},{"id":"lesson1_2","no":2,"title":"ثروتي اللغوية","file":"files/lessons/lesson1/sheet_2.pdf"},{"id":"lesson1_3","no":3,"title":"المفرد والمثنى","file":"files/lessons/lesson1/sheet_3.pdf"},{"id":"lesson1_4","no":4,"title":"أكتب وأرتب","file":"files/lessons/lesson1/sheet_4.pdf"}],"pdf":"files/lessons/lesson1/all.pdf","docx":"files/lessons/lesson1/all.docx"},{"slug":"lesson2","subject":"isl","title":"الدراسات الإسلامية – الفصل الأول","sheets":[{"id":"lesson2_1","no":1,"title":"أسماء الله وصفاته","file":"files/lessons/lesson2/sheet_1.pdf"},{"id":"lesson2_2","no":2,"title":"لماذا خلقنا الله والعبادة","file":"files/lessons/lesson2/sheet_2.pdf"},{"id":"lesson2_3","no":3,"title":"عبادة الله وحده","file":"files/lessons/lesson2/sheet_3.pdf"},{"id":"lesson2_4","no":4,"title":"آداب التعامل مع الناس","file":"files/lessons/lesson2/sheet_4.pdf"},{"id":"lesson2_5","no":5,"title":"الأذكار والأدعية","file":"files/lessons/lesson2/sheet_5.pdf"},{"id":"lesson2_6","no":6,"title":"آداب النظافة","file":"files/lessons/lesson2/sheet_6.pdf"},{"id":"lesson2_7","no":7,"title":"آداب الأكل والشرب","file":"files/lessons/lesson2/sheet_7.pdf"},{"id":"lesson2_8","no":8,"title":"المحافظة على الممتلكات","file":"files/lessons/lesson2/sheet_8.pdf"}],"pdf":"files/lessons/lesson2/all.pdf","docx":"files/lessons/lesson2/all.docx"}],"injaz":{"pdf":"files/teacher/injaz.pdf","docx":"files/teacher/injaz.docx"},"earlier":[{"id":"x1","group":"s","title":"الحرف المشدد (١)","sub":"مهارة الشدة","pages":2,"file":"files/earlier/x1.pdf","docx":null},{"id":"x2","group":"s","title":"الحرف المشدد (٢)","sub":"مهارة الشدة","pages":2,"file":"files/earlier/x2.pdf","docx":"files/earlier/x2.docx"},{"id":"x3","group":"s","title":"المفرد والجمع (١)","sub":"الإفراد والجمع","pages":2,"file":"files/earlier/x3.pdf","docx":null},{"id":"x4","group":"s","title":"المفرد والجمع (٢)","sub":"الإفراد والجمع","pages":2,"file":"files/earlier/x4.pdf","docx":"files/earlier/x4.docx"},{"id":"x5","group":"s","title":"أدوات الاستفهام (١)","sub":"أسلوب الاستفهام","pages":2,"file":"files/earlier/x5.pdf","docx":null},{"id":"x6","group":"s","title":"أدوات الاستفهام (٢)","sub":"أسلوب الاستفهام","pages":2,"file":"files/earlier/x6.pdf","docx":"files/earlier/x6.docx"},{"id":"x7","group":"s","title":"التنوين والسكون مع التحليل","sub":"التنوين والسكون","pages":6,"file":"files/earlier/x7.pdf","docx":null},{"id":"x8","group":"s","title":"التاء المفتوحة والمربوطة مع «ال» القمرية والشمسية","sub":"التاء ولام التعريف","pages":3,"file":"files/earlier/x8.pdf","docx":null},{"id":"x9","group":"s","title":"تحليل الكلمة: حروف المد","sub":"أصوات المد","pages":2,"file":"files/earlier/x9.pdf","docx":null},{"id":"x10","group":"s","title":"استخراج الظواهر اللغوية من درس «صلة الرحم»","sub":"الظواهر اللغوية","pages":3,"file":"files/earlier/x10.pdf","docx":null},{"id":"x11","group":"t","title":"تقويم الدرس الأول «صلة الرحم»","sub":"ورقة تقويم","pages":6,"file":"files/earlier/x11.pdf","docx":null},{"id":"x12","group":"t","title":"تقويم الدرس الثاني «عذرًا يا جدي»","sub":"ورقة تقويم","pages":4,"file":"files/earlier/x12.pdf","docx":null},{"id":"x13","group":"t","title":"اختبار قصير: القمرية والشمسية والتاء وترتيب الكلمات وتحليلها","sub":"اختبار قصير","pages":3,"file":"files/earlier/x13.pdf","docx":null},{"id":"x14","group":"t","title":"مراجعة شاملة مختصرة: الوحدتان الأولى والثانية","sub":"مراجعة","pages":5,"file":"files/earlier/x14.pdf","docx":null},{"id":"x15","group":"t","title":"اختبار الفترة الأولى الشامل (٢٠ درجة)","sub":"اختبار فترة","pages":3,"file":"files/earlier/x15.pdf","docx":null},{"id":"x16","group":"t","title":"اختبار الفترة الأولى من المراجعة (٢٠ درجة)","sub":"اختبار فترة","pages":4,"file":"files/earlier/x16.pdf","docx":null}],"notice":"files/teacher/notice.pdf","built":"2026-10-26"};
+const $ = (s, r = document) => r.querySelector(s);
+const AR = "٠١٢٣٤٥٦٧٨٩";
+const ar = (x) => String(x).replace(/[0-9]/g, (d) => AR[d]).replace(/\./g, "٫");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const CAT = { intensive: ["علاجية مكثفة", "var(--bad)"], support: ["دعم ومتابعة", "var(--warn)"], enrich: ["إثرائية", "var(--ok)"] };
+const tone = (p) => (p < 65 ? "lo" : p < 80 ? "mid" : "hi");
+const abs = (rel) => new URL(rel, location.href).href;
+function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+
+$("#hdsub").textContent = `${P.school} · ${P.term}`;
+$("#foot").innerHTML = `${esc(P.teacher)} · معلم الصف الثاني (لغتي والدراسات الإسلامية) · ${esc(P.school)}<br>آخر تحديث: ${ar(P.built)}`;
+
+// ---------- home ----------
+function weekNow() {
+  const t = new Date().toISOString().slice(0, 10);
+  for (let i = 0; i < P.weekDates.length; i++) { const [a, b] = P.weekDates[i]; if (t >= a && t <= b) return { i, state: "in" }; if (t < a) return { i, state: "before" }; }
+  return { i: P.weekDates.length - 1, state: "after" };
+}
+const wsById = Object.fromEntries(P.ws.map((w) => [w.id, w]));
+const wsLabel = (w) => (w.kind === "e" ? "إ" + ar(w.no) : ar(w.no));
+function homeView() {
+  const wn = weekNow(), w = P.weeks[wn.i];
+  const t = new Date().toISOString().slice(0, 10);
+  const inBreak = t >= "2026-11-20" && t <= "2026-11-28";
+  const head = wn.state === "after" ? "انتهى البرنامج" : inBreak ? "إجازة الخريف" : wn.state === "before" ? `الأسبوع القادم: ${w.n}` : `نحن في الأسبوع ${w.n} من البرنامج`;
+  const sheets = P.ws.filter((x) => x.weeks.includes(wn.i + 1));
+  $("#now").innerHTML = `<span class="tag">${head}</span><strong>${esc(w.focus)}</strong>
+    <span class="small muted">${esc(w.h)} · ${esc(w.g)} · الإثراء: ${esc(w.enrich)}</span>
+    <div class="chips" style="display:flex;flex-wrap:wrap;gap:6px">${sheets.map((x) => `<a class="chip ${x.kind}" href="${x.file}" target="_blank" rel="noopener">ورقة ${wsLabel(x)}: ${esc(x.title)}</a>`).join("")}</div>`;
+  const k = P.kpi;
+  $("#kpis").innerHTML = [[ar(k.mean) + "٪", "متوسط الصف (من ٦٠ درجة مرصودة)"], [ar(k.median) + "٪", "الوسيط"], [ar(k.skills) + "٪", "متوسط إتقان المهارات"],
+    [ar(k.attendance) + "٪", "متوسط الحضور"], [`${ar(k.excellent)} من ${ar(P.n)}`, "طلاب بمستوى ممتاز"], [ar(k.perfect), "الدرجة الكاملة في كل ما رُصد"]]
+    .map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("");
+  $("#cats").innerHTML = Object.entries(P.cats).map(([c, n]) => `<div style="flex:${n};background:${CAT[c][1]}">${ar(n)}</div>`).join("");
+  $("#catleg").innerHTML = Object.entries(P.cats).map(([c, n]) => `<span><i style="background:${CAT[c][1]}"></i>${CAT[c][0]}: ${ar(n)}</span>`).join("");
+  $("#levels").innerHTML = Object.entries(P.levels).map(([l, n]) => bar(l, (100 * n) / P.n, `${ar(n)}`, l === "ممتاز" ? "hi" : l === "جيد جدًا" ? "hi" : l === "متوسط" ? "mid" : "lo", true)).join("");
+  $("#mastery").innerHTML = [...P.mastery].sort((a, b) => a.pct - b.pct).map((m) => bar(m.short, m.pct, ar(m.pct) + "٪", tone(m.pct), false, `${m.name}: غير متقن ${m.x}، يحتاج متابعة ${m.f}`)).join("");
+  $("#domains").innerHTML = P.domains.map((d) => bar(d.name, d.pct, ar(d.pct) + "٪", tone(d.pct))).join("");
+  $("#comp").innerHTML = P.comp.map((c) => bar(c.name, c.pct, ar(c.pct) + "٪", tone(c.pct))).join("");
+  $("#period").textContent = `${P.period} · ${P.brk}`;
+  $("#weeks").innerHTML = P.weeks.map((w, i) => {
+    const sh = P.ws.filter((x) => x.weeks.includes(i + 1));
+    return `<div class="week${i === wn.i && wn.state === "in" ? " cur" : ""}"><div class="no">${w.n}<small>أسبوع</small></div><div>
+      <b>${esc(w.focus)}</b><div class="small muted">${esc(w.h)} · ${esc(w.g)}</div><div class="small">الإثراء: ${esc(w.enrich)}</div>
+      <div class="chips">${sh.map((x) => `<a class="chip ${x.kind}" href="${x.file}" target="_blank" rel="noopener">${wsLabel(x)} ${esc(x.title)}</a>`).join("")}</div></div></div>`;
+  }).join("");
+}
+function bar(label, p, v, cls, nothr, title) {
+  return `<div class="bar${nothr ? " nothr" : ""}"${title ? ` title="${esc(title)}"` : ""}><span>${esc(label)}</span><span class="t"><i class="${cls}" style="width:${Math.max(2, p)}%"></i></span><span class="v">${v}</span></div>`;
+}
+
+// ---------- worksheets ----------
+const LIB = [
+  ...P.ws.map((w) => ({ ...w, group: w.kind === "e" ? "e" : "r", badge: wsLabel(w), sub: `${w.skill} · ${w.week}`, share: `ورقة عمل: ${w.title}` })),
+  ...P.lessons.flatMap((l) => l.sheets.map((s) => l.subject === "isl"
+    ? { id: s.id, group: "isl", kind: "i", badge: ar(s.no), title: s.title, sub: "الدراسات الإسلامية · الفصل الأول", file: s.file, share: `ورقة عمل الدراسات الإسلامية: ${s.title}` }
+    : { id: s.id, group: "l", kind: "l", badge: ar(s.no), title: s.title, sub: `لغتي · درس «${l.title}»`, file: s.file, share: `ورقة عمل ${ar(s.no)} - درس ${l.title}: ${s.title}` })),
+  ...P.earlier.map((x) => ({ id: x.id, group: x.group, kind: x.group === "t" ? "t" : "s", badge: x.group === "t" ? "تقويم" : "ورقة", title: x.title, sub: `${x.sub} · ${ar(x.pages)} صفحة`, file: x.file, docx: x.docx, share: x.title })),
+];
+let wsGroup = "all";
+const GROUPS = [["all", "الكل"], ["isl", "الدراسات الإسلامية"], ["l", "لغتي: أوراق الدروس"], ["r", "لغتي: البرنامج العلاجي"], ["e", "لغتي: الإثرائية"], ["s", "لغتي: مهارات سابقة"], ["t", "لغتي: التقويم والاختبارات"]];
+function wsView() {
+  $("#wscount").textContent = `${ar(LIB.length)} ورقة في المكتبة`;
+  $("#wsf").innerHTML = GROUPS.map(([g, t]) => `<button data-g="${g}" aria-pressed="${g === wsGroup}">${t}</button>`).join("");
+  const q = $("#wsq").value.trim();
+  const items = LIB.filter((x) => (wsGroup === "all" || x.group === wsGroup) && (!q || (x.title + " " + x.sub).includes(q)));
+  const packs = wsGroup === "all" && !q ? `${P.lessons.filter((l) => l.pdf).map((l) => `<div class="card ws"><div class="hd"><div class="badge l">درس</div><div><h3>${l.subject === "isl" ? esc(l.title) + " مجمّعة" : `أوراق درس «${esc(l.title)}» مجمّعة`}</h3><div class="small muted">${ar(l.sheets.length)} أوراق في ملف واحد</div></div></div>
+      <div class="acts"><a class="btn fill" href="${l.pdf}" target="_blank" rel="noopener">فتح PDF</a>${l.docx ? `<a class="btn" href="${l.docx}" download>Word</a>` : ""}${waBtn(`أوراق عمل درس ${l.title}`, l.pdf)}</div></div>`).join("")}` : "";
+  $("#wslist").innerHTML = packs + items.map((x) => `<div class="card ws"><div class="hd"><div class="badge ${x.kind}">${x.badge}</div><div><h3>${esc(x.title)}</h3><div class="small muted">${esc(x.sub)}</div></div></div>
+    <div class="acts"><a class="btn fill" href="${x.file}" target="_blank" rel="noopener">فتح PDF</a>${x.docx ? `<a class="btn" href="${x.docx}" download>Word</a>` : ""}${waBtn(x.share, x.file)}</div></div>`).join("") ||
+    `<p class="muted">لا توجد ورقة بهذا الاسم. جرّب كلمة أقصر.</p>`;
+}
+const waBtn = (text, file) => `<a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(text + "\n" + abs(file))}" target="_blank" rel="noopener">واتساب</a>`;
+$("#wsf").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { wsGroup = b.dataset.g; wsView(); } });
+$("#wsq").addEventListener("input", wsView);
+
+// ---------- locked area ----------
+let KEY = null, LOCKED = null;
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+async function deriveKey(pass) {
+  const m = await (await fetch("locked/meta.json", { cache: "no-store" })).json();
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(m.salt), iterations: m.iter, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  await dec(key, b64(m.check)); // throws on a wrong code
+  return key;
+}
+const dec = (key, buf) => crypto.subtle.decrypt({ name: "AES-GCM", iv: buf.slice(0, 12) }, key, buf.slice(12));
+async function getFile(f) {
+  const buf = new Uint8Array(await (await fetch(`locked/f/${f.id}.bin`)).arrayBuffer());
+  return new File([await dec(KEY, buf)], f.name, { type: f.type });
+}
+async function unlock(pass, remember) {
+  KEY = await deriveKey(pass);
+  const buf = new Uint8Array(await (await fetch("locked/data.bin", { cache: "no-store" })).arrayBuffer());
+  LOCKED = JSON.parse(new TextDecoder().decode(await dec(KEY, buf)));
+  try { remember ? localStorage.setItem("lg2", pass) : localStorage.removeItem("lg2"); } catch (e) {}
+  renderLocked();
+}
+function lockForm(target) {
+  return `<form class="lock card" data-lock><div class="ic" aria-hidden="true">🔒</div><h3>هذا القسم فيه أسماء الطلاب ودرجاتهم</h3>
+    <p class="muted small">اكتب الرمز السري مرة واحدة، ويبقى القسم مفتوحًا على هذا الجهاز إن اخترت ذلك.</p>
+    <input type="password" id="pw-${target}" autocomplete="current-password" placeholder="الرمز السري" aria-label="الرمز السري">
+    <label class="small"><input type="checkbox" id="rm-${target}" checked> تذكّرني على هذا الجهاز</label>
+    <button class="btn fill" type="submit" style="justify-content:center">فتح</button><div class="err" role="alert"></div></form>`;
+}
+function renderLockForms() {
+  $("#lockbox").innerHTML = lockForm("s"); $("#lockfiles").innerHTML = lockForm("f");
+}
+document.addEventListener("submit", async (e) => {
+  const f = e.target.closest("[data-lock]"); if (!f) return; e.preventDefault();
+  const pw = f.querySelector("input[type=password]").value.trim(), rm = f.querySelector("input[type=checkbox]").checked, btn = f.querySelector("button"), er = f.querySelector(".err");
+  if (!pw) { er.textContent = "اكتب الرمز السري أولًا."; return; }
+  btn.disabled = true; btn.textContent = "جارٍ الفتح…"; er.textContent = "";
+  try { await unlock(pw, rm); } catch (x) { er.textContent = "الرمز غير صحيح. تأكد من الحروف والأرقام وأعد المحاولة."; btn.disabled = false; btn.textContent = "فتح"; }
+});
+let sFilter = "all";
+function renderLocked() {
+  $("#lockbox").innerHTML = ""; $("#stu").hidden = false;
+  const S = LOCKED.students;
+  $("#scount").textContent = ar(S.length);
+  $("#sf").innerHTML = [["all", "الكل"], ["intensive", "علاجية مكثفة"], ["support", "دعم ومتابعة"], ["enrich", "إثرائية"]]
+    .map(([c, t]) => `<button data-c="${c}" aria-pressed="${c === sFilter}">${t}</button>`).join("");
+  $("#slist").innerHTML = S.filter((s) => sFilter === "all" || s.cat === sFilter).map((s) => {
+    const weak = Object.values(s.status), x = weak.filter((v) => v === "X").length, f = weak.filter((v) => v === "F").length;
+    return `<button class="srow" data-n="${esc(s.name)}"><span class="nm">${esc(s.name)}</span><span class="pc">${ar(s.scores.pct)}٪</span>
+      <span class="meta"><span class="chip" style="color:${CAT[s.cat][1]}">${CAT[s.cat][0]}</span><span class="chip">متقن ${ar(s.mastered)} من ١٩</span>
+      ${x ? `<span class="chip bad">غير متقن ${ar(x)}</span>` : ""}${f ? `<span class="chip warn">يحتاج متابعة ${ar(f)}</span>` : ""}<span class="chip">غياب ${ar(s.abs)}</span></span></button>`;
+  }).join("");
+  $("#lockfiles").innerHTML = `<div class="flist">${LOCKED.named.map((f, i) => `<div class="frow"><div class="ft"><b>${esc(f.title)}</b><span class="small muted">${esc(f.group)}${f.pages ? " · " + ar(f.pages) + " صفحة" : ""}</span></div>
+    <button class="btn fill" data-open="${i}">فتح</button><button class="btn wa" data-share="${i}">مشاركة</button></div>`).join("")}</div>`;
+}
+$("#sf").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { sFilter = b.dataset.c; renderLocked(); } });
+$("#slist").addEventListener("click", (e) => { const b = e.target.closest(".srow"); if (b) openStudent(b.dataset.n); });
+
+// open / share decrypted files
+async function openLocked(f, btn) {
+  const w = f.type === "application/pdf" ? window.open("", "_blank") : null;
+  if (btn) { btn.disabled = true; }
+  try {
+    const file = await getFile(f), url = URL.createObjectURL(file);
+    if (w) w.location = url; else { const a = document.createElement("a"); a.href = url; a.download = f.name; a.click(); }
+  } catch (x) { if (w) w.close(); toast("تعذّر فتح الملف. أعد تحميل الصفحة وحاول مرة أخرى."); }
+  if (btn) btn.disabled = false;
+}
+const ready = new Map();
+async function prepare(f) { if (!ready.has(f.id)) ready.set(f.id, getFile(f)); return ready.get(f.id); }
+async function shareLocked(f, text, btn) {
+  try {
+    const file = await prepare(f);
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text }); return; }
+    const url = URL.createObjectURL(file); const a = document.createElement("a"); a.href = url; a.download = f.name; a.click();
+    toast("حُفظ الملف. أرفقه في واتساب يدويًا.");
+    if (text) window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+  } catch (x) { if (x && x.name === "AbortError") return; if (x && x.name === "NotAllowedError") { toast("الملف جاهز. اضغط «مشاركة» مرة أخرى."); return; } toast("تعذّرت المشاركة. استعمل «فتح» ثم شارك من المتصفح."); }
+}
+document.addEventListener("click", (e) => {
+  const o = e.target.closest("[data-open]"), s = e.target.closest("[data-share]");
+  if (o) openLocked(LOCKED.named[+o.dataset.open], o);
+  if (s) { const f = LOCKED.named[+s.dataset.share]; shareLocked(f, f.title, s); }
+});
+
+function openStudent(name) {
+  const s = LOCKED.students.find((x) => x.name === name);
+  $("#dlgt").textContent = s.name;
+  const sc = s.scores;
+  const skills = P.mastery.map((m) => { const st = s.status[m.k]; return `<span class="chip ${st === "X" ? "bad" : st === "F" ? "warn" : "ok"}" title="${esc(m.name)}">${esc(m.short)}</span>`; }).join("");
+  const weakKeys = Object.keys(s.status);
+  const crit = weakKeys.filter((k) => P.crit[k]).map((k) => `<li><b>${esc(P.mastery.find((m) => m.k === k).short)}:</b> ${esc(P.crit[k])}</li>`).join("");
+  const sheets = s.sheets.map((id) => wsById[id]).filter(Boolean);
+  const parentText = (s.msg ? s.msg + "\n\n" : "") + `خطة ${s.name} في مادة لغتي – الصف الثاني.\nمعلم المادة: ${P.teacher}`;
+  $("#dlgb").innerHTML = `
+    <div><span class="chip" style="color:${CAT[s.cat][1]}">خطة ${CAT[s.cat][0]}</span> <span class="chip">متقن ${ar(s.mastered)} من ١٩ مهارة</span> <span class="chip">القرآن ${ar(s.quran)}٪</span> <span class="chip">غياب ${ar(s.abs)}</span></div>
+    <div class="sc">${[["المجموع من ٦٠", sc.total], ["النسبة", sc.pct + "٪"], ["الاختبار الشهري /٢٠", sc.monthly], ["القراءة /١٠", sc.read], ["الواجبات /١٠", sc.hw], ["الإملاء والخط /١٠", sc.dict], ["المشاركة /١٠", sc.part]]
+      .map(([l, v]) => `<div>${l}<b>${ar(v)}</b></div>`).join("")}</div>
+    <div><h3>خريطة المهارات</h3><div class="skmap">${skills}</div><div class="legend"><span><i class="hi"></i>متقن</span><span><i class="mid"></i>يحتاج متابعة</span><span><i class="lo"></i>غير متقن</span></div></div>
+    ${crit ? `<div><h3>معايير الإتقان المطلوبة</h3><ul class="small" style="margin:0;padding-inline-start:1.2em">${crit}</ul></div>` : ""}
+    <div><h3>أوراقه (${ar(sheets.length)})</h3><div class="chips" style="display:flex;flex-wrap:wrap;gap:6px">${sheets.map((x) => `<a class="chip ${x.kind}" href="${x.file}" target="_blank" rel="noopener">${wsLabel(x)} ${esc(x.title)}</a>`).join("")}</div></div>
+    <div class="flist">
+      <div class="frow"><div class="ft"><b>ملف الطالب</b><span class="small muted">صفحة التحليل ثم أوراقه باسمه · ${ar(s.files.student.pages)} صفحة</span></div><button class="btn fill" data-sf="student">فتح</button><button class="btn wa" data-ss="student">مشاركة</button></div>
+      <div class="frow"><div class="ft"><b>الخطة الفردية (نسخة ولي الأمر)</b><span class="small muted">${ar(s.files.plan.pages)} صفحة</span></div><button class="btn fill" data-sf="plan">فتح</button><button class="btn wa fill" data-ss="plan">أرسل لولي الأمر</button></div>
+    </div>
+    ${s.msg ? `<div><h3>رسالة ولي الأمر</h3><div class="msg">${esc(s.msg)}</div><p class="small muted">تُرسل مع الخطة عند الضغط على «أرسل لولي الأمر».</p></div>` : ""}`;
+  $("#dlgb").onclick = (e) => {
+    const o = e.target.closest("[data-sf]"), sh = e.target.closest("[data-ss]");
+    if (o) openLocked(s.files[o.dataset.sf], o);
+    if (sh) shareLocked(s.files[sh.dataset.ss], sh.dataset.ss === "plan" ? parentText : `ملف ${s.name} – لغتي الصف الثاني`, sh);
+  };
+  prepare(s.files.plan); prepare(s.files.student); // decrypt early so sharing keeps the tap's permission
+  $("#dlg").showModal();
+}
+$("#dlgx").onclick = () => $("#dlg").close();
+$("#dlg").addEventListener("click", (e) => { if (e.target === $("#dlg")) $("#dlg").close(); });
+
+// ---------- files ----------
+function filesView() {
+  const pub = [["سجل متابعة الطالب: نموذج فارغ", "للطباعة", P.logBlank],
+    ["ملف إنجاز المعلم", "وفق معايير الأداء الوظيفي الأحد عشر", P.injaz.pdf, P.injaz.docx],
+    ["إشعار ولي الأمر بمستوى الطالب وخطة علاجية", "نموذج بدون اسم طالب", P.notice],
+    ...P.lessons.filter((l) => l.pdf).map((l) => [l.subject === "isl" ? `أوراق ${l.title}` : `أوراق درس «${l.title}»`, `${ar(l.sheets.length)} أوراق`, l.pdf, l.docx])];
+  $("#pubfiles").innerHTML = pub.map(([t, d, pdf, docx]) => `<div class="frow"><div class="ft"><b>${esc(t)}</b><span class="small muted">${esc(d)}</span></div>
+    <a class="btn fill" href="${pdf}" target="_blank" rel="noopener">PDF</a>${docx ? `<a class="btn" href="${docx}" download>Word</a>` : ""}${waBtn(t, pdf)}</div>`).join("");
+}
+
+// ---------- router ----------
+const VIEWS = ["home", "ws", "students", "files"];
+function route() {
+  const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
+  VIEWS.forEach((x) => $("#v-" + x).classList.toggle("on", x === v));
+  document.querySelectorAll("nav.tabs a").forEach((a) => a.setAttribute("aria-current", a.getAttribute("href") === "#" + v ? "page" : "false"));
+  window.scrollTo(0, 0);
+}
+addEventListener("hashchange", route);
+homeView(); wsView(); filesView(); renderLockForms(); route();
+(async () => { let p = null; try { p = localStorage.getItem("lg2"); } catch (e) {} if (p) { try { await unlock(p, true); } catch (e) { try { localStorage.removeItem("lg2"); } catch (x) {} } } })();
+</script>
+</body>
+</html>
