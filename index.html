@@ -94,7 +94,7 @@ input[type=search],input[type=password],input[type=text]{font:inherit;width:100%
 .ws .badge.i{background:var(--info-bg);color:var(--info)}
 .ws .badge.s{background:var(--soft);color:var(--teal);font-size:.72rem}
 .ws .badge.t{background:var(--bad-bg);color:var(--bad);font-size:.72rem}
-.ws .badge.p{background:var(--gold);color:#fff;font-size:.7rem}
+.ws .badge.p{background:var(--gold);color:#fff;font-size:.7rem;width:auto;padding:0 .55em}
 .ws.print{border-color:var(--gold)}
 .ws h3{margin:0;line-height:1.4}
 .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
@@ -102,6 +102,8 @@ input[type=search],input[type=password],input[type=text]{font:inherit;width:100%
 .btn.fill{background:var(--teal);color:#fff}
 .btn.wa{border-color:#1F8F4E;color:#1F8F4E}
 .btn.wa.fill{background:#1F8F4E;color:#fff}
+.btn.pr{border-color:var(--gold);color:var(--gold)}
+.acts{flex-wrap:wrap}
 .btn:focus-visible,.seg button:focus-visible,nav.tabs a:focus-visible,input:focus-visible,.srow:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .btn[disabled]{opacity:.5;cursor:wait}
 .lock{max-width:420px;margin:30px auto;text-align:center;display:grid;gap:12px}
@@ -261,9 +263,9 @@ function wsView() {
   const q = $("#wsq").value.trim();
   const items = LIB.filter((x) => (wsGroup === "all" || x.group === wsGroup) && (!q || (x.title + " " + x.sub).includes(q)));
   const packs = wsGroup === "all" && !q ? `${PRINT.map(printCard).join("")}${P.lessons.filter((l) => l.pdf).map((l) => `<div class="card ws"><div class="hd"><div class="badge l">درس</div><div><h3>${l.subject === "isl" ? esc(l.title) + " مجمّعة" : `أوراق درس «${esc(l.title)}» مجمّعة`}</h3><div class="small muted">${nSheets(l.sheets.length)} في ملف واحد</div></div></div>
-      <div class="acts"><a class="btn fill" href="${l.pdf}" target="_blank" rel="noopener">فتح PDF</a>${l.docx ? `<a class="btn" href="${l.docx}" download>Word</a>` : ""}${waBtn(`أوراق عمل درس ${l.title}`, l.pdf)}</div></div>`).join("")}` : "";
+      <div class="acts"><a class="btn fill" href="${l.pdf}" target="_blank" rel="noopener">فتح PDF</a>${prBtn(l.pdf)}${l.docx ? `<a class="btn" href="${l.docx}" download>Word</a>` : ""}${waBtn(`أوراق عمل درس ${l.title}`, l.pdf)}</div></div>`).join("")}` : "";
   $("#wslist").innerHTML = packs + items.map((x) => `<div class="card ws"><div class="hd"><div class="badge ${x.kind}">${x.badge}</div><div><h3>${esc(x.title)}</h3><div class="small muted">${esc(x.sub)}</div></div></div>
-    <div class="acts"><a class="btn fill" href="${x.file}" target="_blank" rel="noopener">فتح PDF</a>${x.docx ? `<a class="btn" href="${x.docx}" download>Word</a>` : ""}${waBtn(x.share, x.file)}</div></div>`).join("") ||
+    <div class="acts"><a class="btn fill" href="${x.file}" target="_blank" rel="noopener">فتح PDF</a>${prBtn(x.file)}${x.docx ? `<a class="btn" href="${x.docx}" download>Word</a>` : ""}${waBtn(x.share, x.file)}</div></div>`).join("") ||
     `<p class="muted">لا توجد ورقة بهذا الاسم. جرّب كلمة أقصر.</p>`;
 }
 const nSheets = (k) => k === 1 ? "ورقة واحدة" : k === 2 ? "ورقتان" : k <= 10 ? `${ar(k)} أوراق` : `${ar(k)} ورقة`;
@@ -272,7 +274,28 @@ const PRINT = [["ملف الطباعة الشامل: جميع أوراق الع�
   ["ملف طباعة لغتي كاملًا", "الدروس والمهارات والتقويم والبرنامج العلاجي والإثرائي", P.print.lugh],
   ["ملف طباعة الدراسات الإسلامية", "أوراق الفصل الأول", P.print.isl]];
 const printCard = ([t, d, f]) => `<div class="card ws print"><div class="hd"><div class="badge p">طباعة</div><div><h3>${esc(t)}</h3><div class="small muted">${esc(d)} · ${ar(f.pages)} صفحة · ${ar(f.mb)} م.ب</div></div></div>
-    <div class="acts"><a class="btn fill" href="${f.file}" target="_blank" rel="noopener">فتح PDF</a><a class="btn" href="${f.file}" download>تحميل</a>${waBtn(t, f.file)}</div></div>`;
+    <div class="acts"><a class="btn fill" href="${f.file}" target="_blank" rel="noopener">فتح PDF</a>${prBtn(f.file)}<a class="btn" href="${f.file}" download>تحميل</a>${waBtn(t, f.file)}</div></div>`;
+const prBtn = (file) => `<button class="btn pr" data-print="${file}">طباعة</button>`;
+// iPhone/iPad: the share sheet has «طباعة»; elsewhere print from a hidden frame
+async function printPdf(file, btn) {
+  const old = btn.textContent; btn.disabled = true; btn.textContent = "جارٍ التجهيز…";
+  try {
+    const blob = await (await fetch(file)).blob();
+    const f = new File([blob], (btn.closest(".card,.frow")?.querySelector("h3,b")?.textContent || "ورقة عمل").replace(/[\/:*?"<>|«»]/g, "") + ".pdf", { type: "application/pdf" });
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (ios && navigator.canShare && navigator.canShare({ files: [f] })) {
+      toast("اختر «طباعة» من القائمة");
+      try { await navigator.share({ files: [f] }); } catch (e) {}
+    } else {
+      const url = URL.createObjectURL(blob), fr = document.createElement("iframe");
+      fr.style.cssText = "position:fixed;width:0;height:0;border:0;right:0;bottom:0"; fr.src = url; document.body.appendChild(fr);
+      fr.onload = () => { try { fr.contentWindow.focus(); fr.contentWindow.print(); } catch (e) { window.open(url, "_blank"); } };
+      setTimeout(() => { fr.remove(); URL.revokeObjectURL(url); }, 120000);
+    }
+  } catch (e) { window.open(file, "_blank"); }
+  btn.disabled = false; btn.textContent = old;
+}
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-print]"); if (b) { e.preventDefault(); printPdf(b.dataset.print, b); } });
 const waBtn = (text, file) => `<a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(text + "\n" + abs(file))}" target="_blank" rel="noopener">واتساب</a>`;
 $("#wsf").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { wsGroup = b.dataset.g; wsView(); } });
 $("#wsq").addEventListener("input", wsView);
@@ -401,7 +424,7 @@ function filesView() {
     ["إشعار ولي الأمر بمستوى الطالب وخطة علاجية", "نموذج بدون اسم طالب", P.notice],
     ...P.lessons.filter((l) => l.pdf).map((l) => [l.subject === "isl" ? `أوراق ${l.title}` : `أوراق درس «${l.title}»`, nSheets(l.sheets.length), l.pdf, l.docx])];
   $("#pubfiles").innerHTML = pub.map(([t, d, pdf, docx]) => `<div class="frow"><div class="ft"><b>${esc(t)}</b><span class="small muted">${esc(d)}</span></div>
-    <a class="btn fill" href="${pdf}" target="_blank" rel="noopener">PDF</a>${docx ? `<a class="btn" href="${docx}" download>Word</a>` : ""}${waBtn(t, pdf)}</div>`).join("");
+    <a class="btn fill" href="${pdf}" target="_blank" rel="noopener">PDF</a>${prBtn(pdf)}${docx ? `<a class="btn" href="${docx}" download>Word</a>` : ""}${waBtn(t, pdf)}</div>`).join("");
 }
 
 // ---------- router ----------
