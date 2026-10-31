@@ -340,8 +340,10 @@ document.addEventListener("submit", async (e) => {
   try { await unlock(pw, rm); } catch (x) { er.textContent = "الرمز غير صحيح. تأكد من الحروف والأرقام وأعد المحاولة."; btn.disabled = false; btn.textContent = "فتح"; }
 });
 let sFilter = "all";
+const LOGOUT = `<div style="text-align:left;margin-bottom:10px"><button class="btn" data-logout>تسجيل الخروج</button></div>`;
+document.addEventListener("click", (e) => { if (!e.target.closest("[data-logout]")) return; try { localStorage.removeItem("lg2"); } catch (x) {} location.reload(); });
 function renderLocked() {
-  $("#lockbox").innerHTML = ""; $("#stu").hidden = false;
+  $("#lockbox").innerHTML = LOGOUT; $("#stu").hidden = false;
   const S = LOCKED.students;
   $("#scount").textContent = ar(S.length);
   $("#sf").innerHTML = [["all", "الكل"], ["intensive", "علاجية مكثفة"], ["support", "دعم ومتابعة"], ["enrich", "إثرائية"]]
@@ -352,7 +354,7 @@ function renderLocked() {
       <span class="meta"><span class="chip" style="color:${CAT[s.cat][1]}">${CAT[s.cat][0]}</span><span class="chip">متقن ${ar(s.mastered)} من ١٩</span>
       ${x ? `<span class="chip bad">غير متقن ${ar(x)}</span>` : ""}${f ? `<span class="chip warn">يحتاج متابعة ${ar(f)}</span>` : ""}<span class="chip">غياب ${ar(s.abs)}</span></span></button>`;
   }).join("");
-  $("#lockfiles").innerHTML = `<div class="flist">${LOCKED.named.map((f, i) => `<div class="frow"><div class="ft"><b>${esc(f.title)}</b><span class="small muted">${esc(f.group)}${f.pages ? " · " + ar(f.pages) + " صفحة" : ""}</span></div>
+  $("#lockfiles").innerHTML = LOGOUT + `<div class="flist">${LOCKED.named.map((f, i) => `<div class="frow"><div class="ft"><b>${esc(f.title)}</b><span class="small muted">${esc(f.group)}${f.pages ? " · " + ar(f.pages) + " صفحة" : ""}</span></div>
     <button class="btn fill" data-open="${i}">فتح</button><button class="btn wa" data-share="${i}">مشاركة</button></div>`).join("")}</div>`;
 }
 $("#sf").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { sFilter = b.dataset.c; renderLocked(); } });
